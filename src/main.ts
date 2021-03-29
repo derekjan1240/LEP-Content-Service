@@ -1,13 +1,22 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { initSwagger } from './app.swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  await app.listen(8083, () => {
-    Logger.log('Content Service is running on port 8083!');
+  const logger = new Logger('Bootstrap');
+
   initSwagger(app);
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+    }),
+  );
+
+  await app.listen(8083, async () => {
+    logger.log(`Content Service is running on port 8083!`);
   });
 }
 bootstrap();
