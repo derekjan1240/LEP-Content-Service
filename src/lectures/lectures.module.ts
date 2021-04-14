@@ -3,11 +3,11 @@ import { LecturesService } from './lectures.service';
 import { LecturesController } from './lectures.controller';
 
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Subjects } from 'src/database/entities/subjects.entity';
-import { Lectures } from 'src/database/entities/lectures.entity';
+import { Subject } from 'src/database/entities/subject.entity';
+import { Lecture } from 'src/database/entities/lecture.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Subjects, Lectures])],
+  imports: [TypeOrmModule.forFeature([Subject, Lecture])],
   controllers: [LecturesController],
   providers: [LecturesService],
 })

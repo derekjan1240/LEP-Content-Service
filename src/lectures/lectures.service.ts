@@ -1,18 +1,18 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Subjects } from 'src/database/entities/subjects.entity';
-import { Lectures } from 'src/database/entities/lectures.entity';
+import { Subject } from 'src/database/entities/subject.entity';
+import { Lecture } from 'src/database/entities/lecture.entity';
 import { LectureDto } from './dto/lecture.dto';
 import { CreateLectureDto } from './dto/create-lecture.dto';
 
 @Injectable()
 export class LecturesService {
   constructor(
-    @InjectRepository(Subjects)
-    private readonly subjectRepository: Repository<Subjects>,
-    @InjectRepository(Lectures)
-    private readonly lectureRepository: Repository<Lectures>,
+    @InjectRepository(Subject)
+    private readonly subjectRepository: Repository<Subject>,
+    @InjectRepository(Lecture)
+    private readonly lectureRepository: Repository<Lecture>,
   ) {}
 
   public async create(dto: CreateLectureDto): Promise<CreateLectureDto> {

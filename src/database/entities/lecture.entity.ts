@@ -1,26 +1,33 @@
 import { Entity, Column, OneToMany, ManyToOne, JoinTable } from 'typeorm';
 import { BaseEntity } from './base.entity';
-import { Subjects } from './subjects.entity';
-import { Units } from './units.entity';
+import { Grade } from './grade.entity';
+import { Subject } from './subject.entity';
+import { Unit } from './unit.entity';
 
 @Entity()
-export class Lectures extends BaseEntity {
+export class Lecture extends BaseEntity {
   @Column({ type: 'varchar', nullable: false })
   title: string;
 
   @ManyToOne(
-    type => Subjects,
+    type => Subject,
     subject => subject.lectures,
   )
-  subject: Subjects;
+  subject: Subject;
+
+  @ManyToOne(
+    type => Subject,
+    subject => subject.lectures,
+  )
+  grade: Grade;
 
   @OneToMany(
-    type => Units,
+    type => Unit,
     unit => unit.lecture,
     {
       eager: false,
     },
   )
   @JoinTable()
-  unit: Units[];
+  units: Unit[];
 }

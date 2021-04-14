@@ -1,15 +1,15 @@
 import { Entity, Column, ManyToOne } from 'typeorm';
 import { BaseEntity } from './base.entity';
-import { Lectures } from './lectures.entity';
+import { Lecture } from './lecture.entity';
 
 @Entity()
-export class Units extends BaseEntity {
+export class Unit extends BaseEntity {
   @Column({ type: 'varchar', nullable: false })
   title: string;
 
   @ManyToOne(
-    type => Lectures,
-    lecture => lecture.unit,
+    type => Lecture,
+    lecture => lecture.units,
   )
-  lecture: Lectures;
+  lecture: Lecture;
 }

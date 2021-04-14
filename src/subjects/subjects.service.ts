@@ -1,18 +1,18 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Grades } from 'src/database/entities/grades.entity';
-import { Subjects } from 'src/database/entities/subjects.entity';
+import { Grade } from 'src/database/entities/grade.entity';
+import { Subject } from 'src/database/entities/subject.entity';
 import { SubjectDto } from './dto/subject.dto';
 import { CreateSubjectDto } from './dto/create-subject.dto';
 
 @Injectable()
 export class SubjectsService {
   constructor(
-    @InjectRepository(Grades)
-    private readonly gradeRepository: Repository<Grades>,
-    @InjectRepository(Subjects)
-    private readonly subjectRepository: Repository<Subjects>,
+    @InjectRepository(Grade)
+    private readonly gradeRepository: Repository<Grade>,
+    @InjectRepository(Subject)
+    private readonly subjectRepository: Repository<Subject>,
   ) {}
 
   public async create(dto: CreateSubjectDto): Promise<CreateSubjectDto> {

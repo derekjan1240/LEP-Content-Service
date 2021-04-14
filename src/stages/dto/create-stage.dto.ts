@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString, Length } from 'class-validator';
-import { Stages } from 'src/database/entities/stages.entity';
+import { Stage } from 'src/database/entities/stage.entity';
 
 export class CreateStageDto {
   @ApiProperty({ required: true })
@@ -15,14 +15,14 @@ export class CreateStageDto {
     return it;
   }
 
-  public static fromEntity(entity: Stages) {
+  public static fromEntity(entity: Stage) {
     return this.from({
       title: entity.title,
     });
   }
 
   public toEntity(user: any = null) {
-    const it = new Stages();
+    const it = new Stage();
     it.title = this.title;
     it.createDateTime = new Date();
     it.createdBy = user?.id;

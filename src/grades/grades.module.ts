@@ -3,11 +3,11 @@ import { GradesService } from './grades.service';
 import { GradesController } from './grades.controller';
 
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Stages } from 'src/database/entities/stages.entity';
-import { Grades } from 'src/database/entities/grades.entity';
+import { Stage } from 'src/database/entities/stage.entity';
+import { Grade } from 'src/database/entities/grade.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Stages, Grades])],
+  imports: [TypeOrmModule.forFeature([Stage, Grade])],
   controllers: [GradesController],
   providers: [GradesService],
 })

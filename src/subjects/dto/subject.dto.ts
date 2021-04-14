@@ -6,9 +6,9 @@ import {
   IsString,
   Length,
 } from 'class-validator';
-import { Subjects } from 'src/database/entities/subjects.entity';
-import { Grades } from 'src/database/entities/grades.entity';
-import { Lectures } from 'src/database/entities/lectures.entity';
+import { Subject } from 'src/database/entities/subject.entity';
+import { Grade } from 'src/database/entities/grade.entity';
+import { Lecture } from 'src/database/entities/lecture.entity';
 
 export class SubjectDto {
   @ApiProperty({ required: true })
@@ -23,11 +23,11 @@ export class SubjectDto {
 
   @ApiProperty({ required: false })
   @IsOptional()
-  grade: Grades;
+  grade: Grade;
 
   @ApiProperty({ required: false })
   @IsOptional()
-  lectures: Lectures[];
+  lectures: Lecture[];
 
   public static from(dto: Partial<SubjectDto>) {
     const it = new SubjectDto();
@@ -38,19 +38,19 @@ export class SubjectDto {
     return it;
   }
 
-  public static fromEntity(entity: Subjects) {
+  public static fromEntity(entity: Subject) {
     return this.from({
       id: entity.id,
       title: entity.title,
-      grade: entity.grade,
+      // grade: entity.grade,
       lectures: entity.lectures,
     });
   }
 
   public toEntity(user: any = null) {
-    const it = new Subjects();
+    const it = new Subject();
     it.title = this.title;
-    it.grade = this.grade;
+    // it.grade = this.grade;
     it.createDateTime = new Date();
     it.createdBy = user?.id;
     it.lastChangedBy = user?.id;

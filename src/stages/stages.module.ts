@@ -3,10 +3,10 @@ import { StagesService } from './stages.service';
 import { StagesController } from './stages.controller';
 
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Stages } from 'src/database/entities/stages.entity';
+import { Stage } from 'src/database/entities/stage.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Stages])],
+  imports: [TypeOrmModule.forFeature([Stage])],
   controllers: [StagesController],
   providers: [StagesService],
 })

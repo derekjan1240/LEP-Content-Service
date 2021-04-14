@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsUUID, IsNotEmpty, IsString, Length } from 'class-validator';
-import { Lectures } from 'src/database/entities/lectures.entity';
-import { Units } from 'src/database/entities/units.entity';
+import { Lecture } from 'src/database/entities/lecture.entity';
+import { Unit } from 'src/database/entities/unit.entity';
 
 export class CreateUnitDto {
   @ApiProperty({ required: true })
@@ -22,14 +22,14 @@ export class CreateUnitDto {
     return it;
   }
 
-  public static fromEntity(entity: Units) {
+  public static fromEntity(entity: Unit) {
     return this.from({
       title: entity.title,
     });
   }
 
-  public toEntity(lecture: Lectures = null, user: any = null) {
-    const it = new Units();
+  public toEntity(lecture: Lecture = null, user: any = null) {
+    const it = new Unit();
     it.title = this.title;
     it.lecture = lecture;
     it.createDateTime = new Date();
