@@ -33,6 +33,7 @@ export class LectureDto {
   }
 
   public static fromEntity(entity: Lecture) {
+    // console.log(entity);
     return this.from({
       id: entity.id,
       title: entity.title,

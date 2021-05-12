@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsUUID, IsNotEmpty, IsString, Length } from 'class-validator';
+import { Grade } from 'src/database/entities/grade.entity';
 import { Lecture } from 'src/database/entities/lecture.entity';
 import { Subject } from 'src/database/entities/subject.entity';
 
@@ -15,10 +16,16 @@ export class CreateLectureDto {
   @IsNotEmpty({ message: '章節必須有科目' })
   subjectId: string;
 
+  @ApiProperty({ required: true })
+  @IsUUID('all', { message: '年級錯誤' })
+  @IsNotEmpty({ message: '章節必須有年級' })
+  gradeId: string;
+
   public static from(dto: Partial<CreateLectureDto>) {
     const it = new CreateLectureDto();
     it.title = dto.title;
     it.subjectId = dto.subjectId;
+    it.gradeId = dto.gradeId;
     return it;
   }
 
@@ -28,10 +35,11 @@ export class CreateLectureDto {
     });
   }
 
-  public toEntity(subject: Subject = null, user: any = null) {
+  public toEntity(subject: Subject = null, grade: Grade, user: any = null) {
     const it = new Lecture();
     it.title = this.title;
     it.subject = subject;
+    it.grade = grade;
     it.createDateTime = new Date();
     it.createdBy = user?.id;
     it.lastChangedBy = user?.id;

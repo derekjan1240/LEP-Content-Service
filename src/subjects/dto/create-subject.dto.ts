@@ -10,15 +10,15 @@ export class CreateSubjectDto {
   @IsNotEmpty({ message: '科目不得為空' })
   title: string;
 
-  @ApiProperty({ required: true })
-  @IsUUID('all', { message: '年級錯誤' })
-  @IsNotEmpty({ message: '科目必須有年級' })
-  gradeId: string;
+  // @ApiProperty({ required: true })
+  // @IsUUID('all', { message: '年級錯誤' })
+  // @IsNotEmpty({ message: '科目必須有年級' })
+  // gradeId: string;
 
   public static from(dto: Partial<CreateSubjectDto>) {
     const it = new CreateSubjectDto();
     it.title = dto.title;
-    it.gradeId = dto.gradeId;
+    // it.gradeId = dto.gradeId;
     return it;
   }
 

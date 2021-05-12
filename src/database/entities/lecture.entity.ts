@@ -16,8 +16,8 @@ export class Lecture extends BaseEntity {
   subject: Subject;
 
   @ManyToOne(
-    type => Subject,
-    subject => subject.lectures,
+    type => Grade,
+    grade => grade.lectures,
   )
   grade: Grade;
 

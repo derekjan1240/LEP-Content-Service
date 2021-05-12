@@ -11,7 +11,7 @@ export class Stage extends BaseEntity {
     type => Grade,
     grade => grade.stage,
     {
-      eager: true,
+      eager: false,
     },
   )
   @JoinTable()

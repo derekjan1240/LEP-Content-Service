@@ -20,12 +20,16 @@ export class StagesService {
 
   public async findAll(): Promise<StageDto[]> {
     return await this.stageRepository
-      .find()
+      .find({
+        relations: ['grades', 'grades.subjects'],
+      })
       .then(stages => stages.map(e => StageDto.fromEntity(e)));
   }
 
   public async findOne(id: string): Promise<StageDto> {
-    const stage = await this.stageRepository.findOne(id);
+    const stage = await this.stageRepository.findOne(id, {
+      relations: ['grades', 'grades.subjects'],
+    });
     if (!stage) {
       throw new HttpException(`${id} 階級不存在!`, HttpStatus.NOT_FOUND);
     }

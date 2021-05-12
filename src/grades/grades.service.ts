@@ -5,6 +5,7 @@ import { Stage } from 'src/database/entities/stage.entity';
 import { Grade } from 'src/database/entities/grade.entity';
 import { GradeDto } from './dto/grade.dto';
 import { CreateGradeDto } from './dto/create-grade.dto';
+import { Subject } from 'src/database/entities/subject.entity';
 
 @Injectable()
 export class GradesService {
@@ -15,7 +16,10 @@ export class GradesService {
     private readonly gradeRepository: Repository<Grade>,
   ) {}
 
-  public async create(dto: CreateGradeDto): Promise<CreateGradeDto> {
+  public async create(
+    dto: CreateGradeDto,
+    subjects: Subject[],
+  ): Promise<CreateGradeDto> {
     const stage = await this.stageRepository.findOne(dto.stageId);
     if (!stage) {
       throw new HttpException(
@@ -24,7 +28,7 @@ export class GradesService {
       );
     }
     return this.gradeRepository
-      .save(dto.toEntity(stage))
+      .save(dto.toEntity(stage, subjects))
       .then(e => CreateGradeDto.fromEntity(e));
   }
 
@@ -35,7 +39,9 @@ export class GradesService {
   }
 
   public async findOne(id: string): Promise<GradeDto> {
-    const grade = await this.gradeRepository.findOne(id);
+    const grade = await this.gradeRepository.findOne(id, {
+      relations: ['subjects'],
+    });
     if (!grade) {
       throw new HttpException(`${id} 年級不存在!`, HttpStatus.NOT_FOUND);
     }

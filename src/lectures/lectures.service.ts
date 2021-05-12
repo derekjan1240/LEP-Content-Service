@@ -3,12 +3,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Subject } from 'src/database/entities/subject.entity';
 import { Lecture } from 'src/database/entities/lecture.entity';
+import { Grade } from 'src/database/entities/grade.entity';
 import { LectureDto } from './dto/lecture.dto';
 import { CreateLectureDto } from './dto/create-lecture.dto';
 
 @Injectable()
 export class LecturesService {
   constructor(
+    @InjectRepository(Grade)
+    private readonly gradeRepository: Repository<Grade>,
     @InjectRepository(Subject)
     private readonly subjectRepository: Repository<Subject>,
     @InjectRepository(Lecture)
@@ -23,14 +26,23 @@ export class LecturesService {
         HttpStatus.NOT_FOUND,
       );
     }
+
+    const grade = await this.gradeRepository.findOne(dto.gradeId);
+    if (!grade) {
+      throw new HttpException(
+        `${dto.gradeId} 年級不存在!`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
     return this.lectureRepository
-      .save(dto.toEntity(subject))
+      .save(dto.toEntity(subject, grade))
       .then(e => CreateLectureDto.fromEntity(e));
   }
 
-  public async findAll(): Promise<LectureDto[]> {
+  public async findAll(query: Object): Promise<LectureDto[]> {
     return await this.lectureRepository
-      .find()
+      .find({ where: query })
       .then(lectures => lectures.map(e => LectureDto.fromEntity(e)));
   }
 

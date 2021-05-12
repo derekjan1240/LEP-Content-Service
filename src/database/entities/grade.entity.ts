@@ -13,6 +13,9 @@ import { Subject } from './subject.entity';
 
 @Entity()
 export class Grade extends BaseEntity {
+  @Column({ type: 'integer', unsigned: true, nullable: false })
+  order: string;
+
   @Column({ type: 'varchar', nullable: false })
   title: string;
 

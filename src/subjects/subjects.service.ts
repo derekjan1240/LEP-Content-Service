@@ -16,16 +16,20 @@ export class SubjectsService {
   ) {}
 
   public async create(dto: CreateSubjectDto): Promise<CreateSubjectDto> {
-    const grade = await this.gradeRepository.findOne(dto.gradeId);
-    if (!grade) {
-      throw new HttpException(
-        `${dto.gradeId} 年級不存在!`,
-        HttpStatus.NOT_FOUND,
-      );
-    }
+    // const grade = await this.gradeRepository.findOne(dto.gradeId);
+    // if (!grade) {
+    //   throw new HttpException(
+    //     `${dto.gradeId} 年級不存在!`,
+    //     HttpStatus.NOT_FOUND,
+    //   );
+    // }
     return this.subjectRepository
-      .save(dto.toEntity(grade))
+      .save(dto.toEntity())
       .then(e => CreateSubjectDto.fromEntity(e));
+  }
+
+  public async findSubjectsByIds(ids): Promise<Subject[]> {
+    return await this.subjectRepository.findByIds(ids);
   }
 
   public async findAll(): Promise<SubjectDto[]> {

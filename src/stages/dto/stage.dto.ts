@@ -37,6 +37,9 @@ export class StageDto {
       id: entity.id,
       title: entity.title,
       grades: entity.grades,
+      // grades: entity.grades.sort(
+      //   (a, b) => a.createDateTime.getTime() - b.createDateTime.getTime(),
+      // ),
     });
   }
 

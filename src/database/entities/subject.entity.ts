@@ -5,6 +5,9 @@ import { Lecture } from './lecture.entity';
 
 @Entity()
 export class Subject extends BaseEntity {
+  @Column({ type: 'integer', unsigned: true, nullable: false })
+  order: string;
+
   @Column({ type: 'varchar', nullable: false })
   title: string;
 
@@ -24,7 +27,7 @@ export class Subject extends BaseEntity {
     type => Lecture,
     lecture => lecture.subject,
     {
-      eager: true,
+      eager: false,
     },
   )
   @JoinTable()

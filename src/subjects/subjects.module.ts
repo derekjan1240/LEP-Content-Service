@@ -10,5 +10,6 @@ import { Subject } from 'src/database/entities/subject.entity';
   imports: [TypeOrmModule.forFeature([Grade, Subject])],
   controllers: [SubjectsController],
   providers: [SubjectsService],
+  exports: [SubjectsService],
 })
 export class SubjectsModule {}
