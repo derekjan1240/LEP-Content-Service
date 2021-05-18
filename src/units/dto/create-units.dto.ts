@@ -1,5 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsUUID, IsNotEmpty, IsString, Length } from 'class-validator';
+import {
+  IsUUID,
+  IsNotEmpty,
+  IsString,
+  IsInt,
+  Min,
+  Max,
+  Length,
+} from 'class-validator';
 import { Lecture } from 'src/database/entities/lecture.entity';
 import { Unit } from 'src/database/entities/unit.entity';
 
@@ -11,6 +19,13 @@ export class CreateUnitDto {
   title: string;
 
   @ApiProperty({ required: true })
+  @IsInt({ message: '單元權重型態錯誤' })
+  @Min(0)
+  @Max(100)
+  @IsNotEmpty({ message: '單元權重不得為空' })
+  order: number;
+
+  @ApiProperty({ required: true })
   @IsUUID('all', { message: '章節錯誤' })
   @IsNotEmpty({ message: '單元必須有章節' })
   lectureId: string;
@@ -18,6 +33,7 @@ export class CreateUnitDto {
   public static from(dto: Partial<CreateUnitDto>) {
     const it = new CreateUnitDto();
     it.title = dto.title;
+    it.order = dto.order;
     it.lectureId = dto.lectureId;
     return it;
   }
@@ -31,6 +47,7 @@ export class CreateUnitDto {
   public toEntity(lecture: Lecture = null, user: any = null) {
     const it = new Unit();
     it.title = this.title;
+    it.order = this.order;
     it.lecture = lecture;
     it.createDateTime = new Date();
     it.createdBy = user?.id;
