@@ -4,7 +4,10 @@ import {
   IsOptional,
   IsNotEmpty,
   IsString,
+  IsInt,
   Length,
+  Min,
+  Max,
 } from 'class-validator';
 import { Lecture } from 'src/database/entities/lecture.entity';
 import { Subject } from 'src/database/entities/subject.entity';
@@ -13,6 +16,12 @@ export class LectureDto {
   @ApiProperty({ required: true })
   @IsUUID()
   id: string;
+
+  @ApiProperty({ required: true })
+  @IsInt()
+  @Min(0)
+  @Max(100)
+  order: number;
 
   @ApiProperty({ required: true })
   @Length(1, 50, { message: '章節長度需要小於五十' })
@@ -27,15 +36,16 @@ export class LectureDto {
   public static from(dto: Partial<LectureDto>) {
     const it = new LectureDto();
     it.id = dto.id;
+    it.order = dto.order;
     it.title = dto.title;
     it.subject = dto.subject;
     return it;
   }
 
   public static fromEntity(entity: Lecture) {
-    // console.log(entity);
     return this.from({
       id: entity.id,
+      order: entity.order,
       title: entity.title,
       subject: entity.subject,
     });

@@ -6,6 +6,7 @@ import { Lecture } from 'src/database/entities/lecture.entity';
 import { Grade } from 'src/database/entities/grade.entity';
 import { LectureDto } from './dto/lecture.dto';
 import { CreateLectureDto } from './dto/create-lecture.dto';
+import { Query } from 'typeorm/driver/Query';
 
 @Injectable()
 export class LecturesService {
@@ -40,7 +41,7 @@ export class LecturesService {
       .then(e => CreateLectureDto.fromEntity(e));
   }
 
-  public async findAll(query: Object): Promise<LectureDto[]> {
+  public async findAll(query: Query): Promise<LectureDto[]> {
     return await this.lectureRepository
       .find({ where: query })
       .then(lectures => lectures.map(e => LectureDto.fromEntity(e)));

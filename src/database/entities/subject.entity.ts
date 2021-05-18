@@ -6,7 +6,7 @@ import { Lecture } from './lecture.entity';
 @Entity()
 export class Subject extends BaseEntity {
   @Column({ type: 'integer', unsigned: true, nullable: false })
-  order: string;
+  order: number;
 
   @Column({ type: 'varchar', nullable: false })
   title: string;
