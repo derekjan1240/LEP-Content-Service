@@ -8,6 +8,7 @@ import { GradesModule } from './grades/grades.module';
 import { LecturesModule } from './lectures/lectures.module';
 import { UnitsModule } from './units/units.module';
 import { SubjectsModule } from './subjects/subjects.module';
+import { TagsModule } from './tags/tags.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { SubjectsModule } from './subjects/subjects.module';
     LecturesModule,
     UnitsModule,
     SubjectsModule,
+    TagsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
