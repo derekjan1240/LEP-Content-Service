@@ -11,6 +11,7 @@ import {
 } from 'class-validator';
 import { Lecture } from 'src/database/entities/lecture.entity';
 import { Subject } from 'src/database/entities/subject.entity';
+import { Unit } from 'src/database/entities/unit.entity';
 
 export class LectureDto {
   @ApiProperty({ required: true })
@@ -33,12 +34,17 @@ export class LectureDto {
   @IsOptional()
   subject: Subject;
 
+  @ApiProperty({ required: false })
+  @IsOptional()
+  units: Unit[];
+
   public static from(dto: Partial<LectureDto>) {
     const it = new LectureDto();
     it.id = dto.id;
     it.order = dto.order;
     it.title = dto.title;
     it.subject = dto.subject;
+    it.units = dto.units;
     return it;
   }
 
@@ -48,6 +54,7 @@ export class LectureDto {
       order: entity.order,
       title: entity.title,
       subject: entity.subject,
+      units: entity.units,
     });
   }
 

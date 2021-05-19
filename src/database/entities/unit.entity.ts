@@ -21,7 +21,7 @@ export class Unit extends BaseEntity {
     type => Tag,
     tag => tag.unit,
     {
-      eager: false,
+      eager: true,
     },
   )
   @JoinTable()
@@ -30,6 +30,9 @@ export class Unit extends BaseEntity {
   @ManyToOne(
     type => Lecture,
     lecture => lecture.units,
+    {
+      eager: false,
+    },
   )
   lecture: Lecture;
 }

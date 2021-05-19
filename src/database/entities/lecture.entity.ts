@@ -28,7 +28,7 @@ export class Lecture extends BaseEntity {
     type => Unit,
     unit => unit.lecture,
     {
-      eager: false,
+      eager: true,
     },
   )
   @JoinTable()
