@@ -4,6 +4,9 @@ import {
   IsOptional,
   IsNotEmpty,
   IsString,
+  IsInt,
+  Min,
+  Max,
   Length,
 } from 'class-validator';
 import { Grade } from 'src/database/entities/grade.entity';
@@ -14,6 +17,12 @@ export class GradeDto {
   @ApiProperty({ required: true })
   @IsUUID()
   id: string;
+
+  @ApiProperty({ required: true })
+  @IsInt()
+  @Min(0)
+  @Max(100)
+  order: number;
 
   @ApiProperty({ required: true })
   @Length(1, 10, { message: '年級長度需要小於十' })
@@ -32,6 +41,7 @@ export class GradeDto {
   public static from(dto: Partial<GradeDto>) {
     const it = new GradeDto();
     it.id = dto.id;
+    it.order = dto.order;
     it.title = dto.title;
     it.stage = dto.stage;
     it.subjects = dto.subjects;
@@ -41,6 +51,7 @@ export class GradeDto {
   public static fromEntity(entity: Grade) {
     return this.from({
       id: entity.id,
+      order: entity.order,
       title: entity.title,
       stage: entity.stage,
       subjects: entity.subjects,
