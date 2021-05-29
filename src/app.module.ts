@@ -9,6 +9,7 @@ import { LecturesModule } from './lectures/lectures.module';
 import { UnitsModule } from './units/units.module';
 import { SubjectsModule } from './subjects/subjects.module';
 import { TagsModule } from './tags/tags.module';
+import { ExercisesModule } from './exercises/exercises.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { TagsModule } from './tags/tags.module';
     UnitsModule,
     SubjectsModule,
     TagsModule,
+    ExercisesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
