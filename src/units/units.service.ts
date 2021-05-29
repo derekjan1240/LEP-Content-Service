@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Query } from 'typeorm/driver/Query';
 import { Lecture } from 'src/database/entities/lecture.entity';
 import { Unit } from 'src/database/entities/unit.entity';
 import { UnitDto } from './dto/unit.dto';
@@ -28,9 +29,9 @@ export class UnitsService {
       .then(e => CreateUnitDto.fromEntity(e));
   }
 
-  public async findAll(): Promise<UnitDto[]> {
+  public async findAll(query: Query): Promise<UnitDto[]> {
     return await this.unitRepository
-      .find()
+      .find({ where: query })
       .then(units => units.map(e => UnitDto.fromEntity(e)));
   }
 

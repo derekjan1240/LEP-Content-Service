@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common';
 import { UnitsService } from './units.service';
 import { UnitDto } from './dto/unit.dto';
 import { CreateUnitDto } from './dto/create-units.dto';
@@ -14,8 +14,8 @@ export class UnitsController {
   }
 
   @Get()
-  public async findAll(): Promise<UnitDto[]> {
-    return await this.unitsService.findAll();
+  public async findAll(@Query() query): Promise<UnitDto[]> {
+    return await this.unitsService.findAll(query);
   }
 
   @Get(':id')
