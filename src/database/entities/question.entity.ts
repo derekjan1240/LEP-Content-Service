@@ -24,19 +24,19 @@ export class Question extends BaseEntity {
     enum: QuestionType,
     nullable: false,
   })
-  role: QuestionType;
+  type: QuestionType;
 
-  @Column({ type: 'varchar', nullable: false, length: 500 })
+  @Column({ type: 'varchar', nullable: false, length: 50 })
   title: string;
 
   @Column({ type: 'varchar', nullable: true, length: 500 })
   description: string;
 
-  @OneToOne(() => Unit, { nullable: false })
+  @ManyToOne(() => Unit, { nullable: false })
   @JoinColumn()
   unit: Unit;
 
-  @OneToOne(() => Tag, { nullable: true })
+  @ManyToOne(() => Tag, { nullable: true })
   @JoinColumn()
   tag: Tag;
 

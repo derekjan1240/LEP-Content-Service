@@ -6,6 +6,7 @@ import {
   Put,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { ExercisesService } from './exercises.service';
 import { CreateExerciseDto } from './dto/create-exercise.dto';
@@ -16,18 +17,19 @@ export class ExercisesController {
   constructor(private readonly exercisesService: ExercisesService) {}
 
   @Post()
-  create(@Body() createExerciseDto: CreateExerciseDto) {
-    return this.exercisesService.create(createExerciseDto);
+  create(@Body() dto: CreateExerciseDto) {
+    const exercise = CreateExerciseDto.from(dto);
+    return this.exercisesService.create(exercise);
   }
 
   @Get()
-  findAll() {
-    return this.exercisesService.findAll();
+  public async findAll(@Query() query): Promise<ExerciseDto[]> {
+    return await this.exercisesService.findAll(query);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.exercisesService.findOne(+id);
+  public async findOne(@Param('id') id: string): Promise<ExerciseDto> {
+    return await this.exercisesService.findOne(id);
   }
 
   @Delete(':id')
