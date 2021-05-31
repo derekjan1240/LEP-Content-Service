@@ -10,6 +10,9 @@ export class Exercise extends BaseEntity {
   @Column({ type: 'varchar', nullable: true, length: 500 })
   description: string;
 
+  @Column({ type: 'varchar', nullable: false })
+  owner: string;
+
   @OneToMany(
     type => Question,
     question => question.exercise,

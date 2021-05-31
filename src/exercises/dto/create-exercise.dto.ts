@@ -41,6 +41,7 @@ export class CreateExerciseDto {
     const it = new Exercise();
     it.title = this.title;
     it.description = this.description;
+    it.owner = user.id;
     it.createDateTime = new Date();
     it.createdBy = user?.id;
     it.lastChangedBy = user?.id;

@@ -24,7 +24,7 @@ export class QuestionDto {
   type: QuestionType;
 
   @ApiProperty({ required: true })
-  @Length(1, 50, { message: '題目標題長度需要小於 50' })
+  @Length(1, 500, { message: '題目標題長度需要小於 500' })
   @IsString({ message: '題目型態錯誤' })
   @IsNotEmpty({ message: '題目不得為空' })
   title: string;

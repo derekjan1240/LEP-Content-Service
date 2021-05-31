@@ -26,17 +26,17 @@ export class Question extends BaseEntity {
   })
   type: QuestionType;
 
-  @Column({ type: 'varchar', nullable: false, length: 50 })
+  @Column({ type: 'varchar', nullable: false, length: 500 })
   title: string;
 
   @Column({ type: 'varchar', nullable: true, length: 500 })
   description: string;
 
-  @ManyToOne(() => Unit, { nullable: false })
+  @ManyToOne(() => Unit, { nullable: false, eager: true })
   @JoinColumn()
   unit: Unit;
 
-  @ManyToOne(() => Tag, { nullable: true })
+  @ManyToOne(() => Tag, { nullable: true, eager: true })
   @JoinColumn()
   tag: Tag;
 
