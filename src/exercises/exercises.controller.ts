@@ -7,24 +7,31 @@ import {
   Param,
   Delete,
   Query,
+  Req,
 } from '@nestjs/common';
 import { ExercisesService } from './exercises.service';
+import { AppService } from 'src/app.service';
 import { CreateExerciseDto } from './dto/create-exercise.dto';
 import { ExerciseDto } from './dto/exercise.dto';
 
 @Controller('exercises')
 export class ExercisesController {
-  constructor(private readonly exercisesService: ExercisesService) {}
+  constructor(
+    private readonly exercisesService: ExercisesService,
+    private readonly appService: AppService,
+  ) {}
 
   @Post()
-  create(@Body() dto: CreateExerciseDto) {
+  public async create(@Req() req, @Body() dto: CreateExerciseDto) {
+    const user = await this.appService.validAauthentication(req.headers);
     const exercise = CreateExerciseDto.from(dto);
-    return this.exercisesService.create(exercise);
+    return this.exercisesService.create(exercise, user);
   }
 
   @Get()
-  public async findAll(@Query() query): Promise<ExerciseDto[]> {
-    return await this.exercisesService.findAll(query);
+  public async findAll(@Req() req, @Query() query): Promise<ExerciseDto[]> {
+    const user = await this.appService.validAauthentication(req.headers);
+    return this.exercisesService.findAll(query, user);
   }
 
   @Get(':id')
@@ -33,7 +40,7 @@ export class ExercisesController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  public async remove(@Param('id') id: string) {
     return this.exercisesService.remove(+id);
   }
 }

@@ -24,8 +24,9 @@ import { ExercisesModule } from './exercises/exercises.module';
     TagsModule,
     ExercisesModule,
   ],
-  controllers: [AppController],
   providers: [AppService],
+  exports: [AppService],
+  controllers: [AppController],
 })
 export class AppModule {
   constructor(private connection: Connection) {}

@@ -1,4 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  ClientProxyFactory,
+  Transport,
+  ClientProxy,
+} from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Query } from 'typeorm/driver/Query';
@@ -9,9 +14,11 @@ import { Choice } from 'src/database/entities/choice.entity';
 import { Tag } from 'src/database/entities/tag.entity';
 import { Unit } from 'src/database/entities/unit.entity';
 import { ExerciseDto } from './dto/exercise.dto';
+import { UserDto } from 'src/user.dto';
 
 @Injectable()
 export class ExercisesService {
+  private client: ClientProxy;
   constructor(
     @InjectRepository(Exercise)
     private readonly exerciseRepository: Repository<Exercise>,
@@ -23,11 +30,20 @@ export class ExercisesService {
     private readonly unitRepository: Repository<Unit>,
     @InjectRepository(Tag)
     private readonly tagRepository: Repository<Tag>,
-  ) {}
+  ) {
+    this.client = ClientProxyFactory.create({
+      transport: Transport.REDIS,
+      options: {
+        url: 'redis://localhost:6379',
+      },
+    });
+  }
 
-  public async create(dto: CreateExerciseDto) {
+  public async create(dto: CreateExerciseDto, user: UserDto) {
     try {
-      const newExercise = await this.exerciseRepository.save(dto.toEntity());
+      const newExercise = await this.exerciseRepository.save(
+        dto.toEntity(user),
+      );
       console.log(newExercise);
 
       for (let index = 0; index < dto.questions.length; index++) {
@@ -71,7 +87,7 @@ export class ExercisesService {
     return dto;
   }
 
-  public async findAll(query: Query): Promise<ExerciseDto[]> {
+  public async findAll(query: Query, user: UserDto): Promise<ExerciseDto[]> {
     return await this.exerciseRepository
       .find({ where: query })
       .then(lectures => lectures.map(e => ExerciseDto.fromEntity(e)));

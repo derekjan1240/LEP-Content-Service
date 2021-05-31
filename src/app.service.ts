@@ -1,9 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import {
   ClientProxyFactory,
   Transport,
   ClientProxy,
 } from '@nestjs/microservices';
+import { AuthenticationDto } from './authentication.dto';
+import { UserDto } from './user.dto';
 @Injectable()
 export class AppService {
   private client: ClientProxy;
@@ -17,7 +19,20 @@ export class AppService {
     });
   }
 
-  getHello(): Promise<string> {
-    return this.client.send<string, string>('getHello', 'Kai').toPromise();
+  public async validAauthentication(headers: any) {
+    const authenticationDto = {
+      token: headers.token,
+      user: headers.user,
+    };
+
+    const user = await this.client
+      .send<any, AuthenticationDto>('AUTH_valid_user', authenticationDto)
+      .toPromise();
+
+    if (!user) {
+      throw new HttpException(`您沒有此操作權限!`, HttpStatus.UNAUTHORIZED);
+    }
+
+    return UserDto.from(user);
   }
 }
