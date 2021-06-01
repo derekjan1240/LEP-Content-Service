@@ -10,6 +10,7 @@ import { UnitsModule } from './units/units.module';
 import { SubjectsModule } from './subjects/subjects.module';
 import { TagsModule } from './tags/tags.module';
 import { ExercisesModule } from './exercises/exercises.module';
+import { ClassroomsModule } from './classrooms/classrooms.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { ExercisesModule } from './exercises/exercises.module';
     SubjectsModule,
     TagsModule,
     ExercisesModule,
+    ClassroomsModule,
   ],
   providers: [AppService],
   exports: [AppService],
