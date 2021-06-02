@@ -18,7 +18,6 @@ import { UserDto } from 'src/user.dto';
 
 @Injectable()
 export class ExercisesService {
-  private client: ClientProxy;
   constructor(
     @InjectRepository(Exercise)
     private readonly exerciseRepository: Repository<Exercise>,
@@ -30,14 +29,7 @@ export class ExercisesService {
     private readonly unitRepository: Repository<Unit>,
     @InjectRepository(Tag)
     private readonly tagRepository: Repository<Tag>,
-  ) {
-    this.client = ClientProxyFactory.create({
-      transport: Transport.REDIS,
-      options: {
-        url: 'redis://localhost:6379',
-      },
-    });
-  }
+  ) {}
 
   public async create(dto: CreateExerciseDto, user: UserDto) {
     try {

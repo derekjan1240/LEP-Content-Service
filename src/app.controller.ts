@@ -10,9 +10,9 @@ export class AppController {
     return '[Content Service] : OK!';
   }
 
-  @Get('/hello')
-  async getHello(): Promise<string> {
-    const helloValue = await this.appService.getHello();
-    return helloValue;
-  }
+  // @Get('/hello')
+  // async getHello(): Promise<string> {
+  //   const helloValue = await this.appService.getHello();
+  //   return helloValue;
+  // }
 }
