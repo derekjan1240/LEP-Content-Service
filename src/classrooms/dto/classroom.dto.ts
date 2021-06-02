@@ -60,7 +60,7 @@ export class ClassroomDto {
       isAllowAdd: entity.isAllowAdd,
       manager: entity.manager,
       studentGroups: entity.studentGroups,
-      studentList: entity.studentList.split(','),
+      studentList: entity.studentList ? entity.studentList.split(',') : [],
     });
   }
 
