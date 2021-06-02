@@ -12,6 +12,8 @@ import {
 import { ClassroomsService } from './classrooms.service';
 import { AppService } from 'src/app.service';
 import { CreateClassroomDto } from './dto/create-classroom.dto';
+import { CreateStudentGroupDto } from './dto/create-student-group-dto';
+import { StudentGroupDto } from './dto/student-group.dto';
 import { UpdateClassroomDto } from './dto/update-classroom.dto';
 
 @Controller('classrooms')
@@ -26,6 +28,14 @@ export class ClassroomsController {
     const user = await this.appService.validAauthentication(req.headers);
     const classroom = CreateClassroomDto.from(dto);
     return this.classroomsService.create(classroom, user);
+  }
+
+  @Post('/create/groups')
+  public async createGroupe(@Req() req, @Body() dto: CreateStudentGroupDto) {
+    const user = await this.appService.validAauthentication(req.headers);
+    const classroomId = dto.classroomId;
+    const groups = dto.groups.map(group => StudentGroupDto.from(group));
+    return this.classroomsService.createGroups(classroomId, groups, user);
   }
 
   @Get()

@@ -8,7 +8,7 @@ export class StudentGroup extends BaseEntity {
   name: string;
 
   @Column({ type: 'varchar', nullable: false })
-  memberSet: string;
+  members: string;
 
   @ManyToOne(
     type => Classroom,

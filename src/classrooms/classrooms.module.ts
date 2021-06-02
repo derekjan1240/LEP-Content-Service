@@ -5,9 +5,13 @@ import { ClassroomsController } from './classrooms.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppModule } from 'src/app.module';
 import { Classroom } from 'src/database/entities/classroom.entity';
+import { StudentGroup } from 'src/database/entities/studentGroup.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Classroom]), forwardRef(() => AppModule)],
+  imports: [
+    TypeOrmModule.forFeature([Classroom, StudentGroup]),
+    forwardRef(() => AppModule),
+  ],
   controllers: [ClassroomsController],
   providers: [ClassroomsService],
 })
