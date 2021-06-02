@@ -38,7 +38,7 @@ export class ClassroomDto {
   studentGroups: StudentGroup[];
 
   @ApiProperty({ required: false, nullable: true })
-  studentList: string;
+  studentList: string[];
 
   public static from(dto: Partial<ClassroomDto>) {
     const it = new ClassroomDto();
@@ -60,7 +60,7 @@ export class ClassroomDto {
       isAllowAdd: entity.isAllowAdd,
       manager: entity.manager,
       studentGroups: entity.studentGroups,
-      studentList: entity.studentList,
+      studentList: entity.studentList.split(','),
     });
   }
 

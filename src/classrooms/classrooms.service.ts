@@ -28,8 +28,9 @@ export class ClassroomsService {
       .then(classrooms => classrooms.map(e => ClassroomDto.fromEntity(e)));
   }
 
-  public async findOne(id: number) {
-    return `This action returns a #${id} classroom`;
+  public async findOne(id: string, user: UserDto) {
+    const classroom = await this.classroomRepository.findOne(id);
+    return ClassroomDto.fromEntity(classroom);
   }
 
   public async update(id: number, updateClassroomDto: UpdateClassroomDto) {

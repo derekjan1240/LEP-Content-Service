@@ -35,8 +35,20 @@ export class ClassroomsController {
   }
 
   @Get(':id')
-  public async findOne(@Param('id') id: string) {
-    return this.classroomsService.findOne(+id);
+  public async findOne(@Req() req, @Param('id') id: string) {
+    const user = await this.appService.validAauthentication(req.headers);
+    const classroom = await this.classroomsService.findOne(id, user);
+    // 帶入 User 資料
+    const userRelations = await this.appService.getUserRelation(
+      [classroom.manager],
+      classroom.studentList,
+    );
+
+    return {
+      ...classroom,
+      ...userRelations,
+      isManager: user.id === userRelations.manager._id,
+    };
   }
 
   @Put(':id')

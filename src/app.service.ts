@@ -35,4 +35,19 @@ export class AppService {
 
     return UserDto.from(user);
   }
+
+  public async getUserRelation(manager: string[], students: string[]) {
+    const managerData = await this.client
+      .send<any, string[]>('AUTH_get_user_relation', manager)
+      .toPromise();
+
+    const studentsData = await this.client
+      .send<any, string[]>('AUTH_get_user_relation', students)
+      .toPromise();
+
+    return {
+      manager: managerData[0],
+      studentList: studentsData,
+    };
+  }
 }
