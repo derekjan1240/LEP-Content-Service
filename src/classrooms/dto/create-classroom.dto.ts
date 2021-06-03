@@ -58,10 +58,10 @@ export class CreateClassroomDto {
     it.isAllowAdd = this.isAllowAdd;
     it.studentGroups = null;
     it.studentList = null;
-    it.manager = user.id;
+    it.manager = user._id;
     it.createDateTime = new Date();
-    it.createdBy = user?.id;
-    it.lastChangedBy = user?.id;
+    it.createdBy = user?._id;
+    it.lastChangedBy = user?._id;
     return it;
   }
 }

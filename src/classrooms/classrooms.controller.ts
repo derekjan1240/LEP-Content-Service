@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Req,
+  Query,
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
@@ -37,6 +38,12 @@ export class ClassroomsController {
     const classroomId = dto.classroomId;
     const groups = dto.groups.map(group => StudentGroupDto.from(group));
     return this.classroomsService.createGroups(classroomId, groups, user);
+  }
+
+  @Post('/join')
+  public async joinClassroom(@Req() req, @Query() query) {
+    const user = await this.appService.validAauthentication(req.headers);
+    return this.classroomsService.joinClassroom(query, user);
   }
 
   @Get()

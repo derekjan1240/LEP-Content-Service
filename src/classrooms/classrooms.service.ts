@@ -1,7 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Query } from 'typeorm/driver/Query';
 import { Classroom } from 'src/database/entities/classroom.entity';
 import { StudentGroup } from 'src/database/entities/studentGroup.entity';
 import { ClassroomDto } from './dto/classroom.dto';
@@ -23,7 +22,7 @@ export class ClassroomsService {
     const newClassroom = await this.classroomRepository.save(
       dto.toEntity(user),
     );
-    return CreateClassroomDto.fromEntity(newClassroom);
+    return ClassroomDto.fromEntity(newClassroom);
   }
 
   public async createGroups(
@@ -51,6 +50,32 @@ export class ClassroomsService {
       console.log(error);
       throw new HttpException(
         `組別更新失敗!`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  public async joinClassroom(query, user: UserDto) {
+    const classroom = await this.classroomRepository.findOne(query.classroom);
+    if (classroom && classroom.isAllowAdd) {
+      let newStudentList = '';
+      if (classroom.studentList) {
+        if (classroom.studentList.split(',').indexOf(user._id) !== -1) {
+          throw new HttpException(`已加入班級!`, HttpStatus.BAD_REQUEST);
+        } else {
+          newStudentList = `${classroom.studentList},${user._id}`;
+        }
+      } else {
+        newStudentList = user._id;
+      }
+      const newClassroom = await this.classroomRepository.save({
+        ...classroom,
+        studentList: newStudentList,
+      });
+      return ClassroomDto.fromEntity(newClassroom);
+    } else {
+      throw new HttpException(
+        `無法加入此班級!`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
