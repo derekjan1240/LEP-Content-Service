@@ -56,14 +56,27 @@ export class ClassroomsService {
     }
   }
 
-  public async findAll(query: Query, user: UserDto): Promise<ClassroomDto[]> {
-    return await this.classroomRepository
-      .find({ where: query })
-      .then(classrooms => classrooms.map(e => ClassroomDto.fromEntity(e)));
+  public async findAll(user: UserDto): Promise<ClassroomDto[]> {
+    if (user.role === 'Admin' || user.role === 'Teacher') {
+      const classrooms = await this.classroomRepository
+        .find({ where: { manager: user._id } })
+        .then(classrooms => classrooms.map(e => ClassroomDto.fromEntity(e)));
+      return classrooms;
+    } else {
+      const classrooms = await this.classroomRepository
+        .find()
+        .then(classrooms => classrooms.map(e => ClassroomDto.fromEntity(e)));
+      return classrooms.filter(
+        classroom => classroom.studentList.indexOf(user._id) !== -1,
+      );
+    }
   }
 
   public async findOne(id: string, user: UserDto) {
     const classroom = await this.classroomRepository.findOne(id);
+    if (!classroom) {
+      throw new HttpException(`班級不存在!`, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
     return ClassroomDto.fromEntity(classroom);
   }
 

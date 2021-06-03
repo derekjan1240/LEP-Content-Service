@@ -7,7 +7,8 @@ import {
   Param,
   Delete,
   Req,
-  Query,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { ClassroomsService } from './classrooms.service';
 import { AppService } from 'src/app.service';
@@ -39,15 +40,22 @@ export class ClassroomsController {
   }
 
   @Get()
-  public async findAll(@Req() req, @Query() query) {
+  public async findAll(@Req() req) {
     const user = await this.appService.validAauthentication(req.headers);
-    return this.classroomsService.findAll(query, user);
+    return this.classroomsService.findAll(user);
   }
 
   @Get(':id')
   public async findOne(@Req() req, @Param('id') id: string) {
     const user = await this.appService.validAauthentication(req.headers);
     const classroom = await this.classroomsService.findOne(id, user);
+    if (
+      classroom.manager !== user._id &&
+      classroom.studentList.indexOf(user._id) === -1
+    ) {
+      throw new HttpException(`您不在此班級中哦!`, HttpStatus.UNAUTHORIZED);
+    }
+
     // 帶入 User 資料
     const userRelations = await this.appService.getUserRelation(
       [classroom.manager],
@@ -57,7 +65,7 @@ export class ClassroomsController {
     return {
       ...classroom,
       ...userRelations,
-      isManager: user.id === userRelations.manager._id,
+      isManager: user._id === userRelations.manager._id,
     };
   }
 
