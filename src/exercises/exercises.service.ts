@@ -82,7 +82,7 @@ export class ExercisesService {
   public async findAll(query: Query, user: UserDto): Promise<ExerciseDto[]> {
     return await this.exerciseRepository
       .find({ where: query })
-      .then(lectures => lectures.map(e => ExerciseDto.fromEntity(e)));
+      .then(lectures => lectures.map(e => ExerciseDto.fromEntity(e, true)));
   }
 
   public async findOne(id: string): Promise<ExerciseDto> {
@@ -90,7 +90,7 @@ export class ExercisesService {
     if (!exercise) {
       throw new HttpException(`${id} 練習卷不存在!`, HttpStatus.NOT_FOUND);
     }
-    return ExerciseDto.fromEntity(exercise);
+    return ExerciseDto.fromEntity(exercise, false);
   }
 
   // update(id: number, updateExerciseDto: ExerciseDto) {

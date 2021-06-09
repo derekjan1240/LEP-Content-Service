@@ -38,12 +38,22 @@ export class ExerciseDto {
     return it;
   }
 
-  public static fromEntity(entity: Exercise) {
+  public static fromEntity(entity: Exercise, withAnswer: Boolean) {
     return this.from({
       id: entity.id,
       title: entity.title,
       description: entity.description,
-      questions: entity.questions,
+      questions: entity.questions.map(question => {
+        return {
+          ...question,
+          choices: question.choices.map(choice => {
+            return {
+              ...choice,
+              isCorrectAnswer: withAnswer ? choice.isCorrectAnswer : null,
+            };
+          }),
+        };
+      }),
     });
   }
 
