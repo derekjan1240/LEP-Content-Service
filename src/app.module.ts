@@ -15,6 +15,7 @@ import { ClassroomsModule } from './classrooms/classrooms.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
+      keepConnectionAlive: true,
       autoLoadEntities: true,
     }),
     StagesModule,

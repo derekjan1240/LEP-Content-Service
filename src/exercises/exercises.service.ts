@@ -82,7 +82,13 @@ export class ExercisesService {
   public async findAll(query: Query, user: UserDto): Promise<ExerciseDto[]> {
     return await this.exerciseRepository
       .find({ where: query })
-      .then(lectures => lectures.map(e => ExerciseDto.fromEntity(e, true)));
+      .then(exercises => exercises.map(e => ExerciseDto.fromEntity(e, true)));
+  }
+
+  public async findByIds(ids: string[]): Promise<ExerciseDto[]> {
+    return await this.exerciseRepository
+      .findByIds(ids)
+      .then(exercises => exercises.map(e => ExerciseDto.fromEntity(e, false)));
   }
 
   public async findOne(id: string): Promise<ExerciseDto> {

@@ -35,6 +35,12 @@ export class UnitsService {
       .then(units => units.map(e => UnitDto.fromEntity(e)));
   }
 
+  public async findByIds(ids: string[]): Promise<UnitDto[]> {
+    return await this.unitRepository
+      .findByIds(ids, { relations: ['lecture'] })
+      .then(units => units.map(e => UnitDto.fromEntity(e)));
+  }
+
   public async findOne(id: string): Promise<UnitDto> {
     const unit = await this.unitRepository.findOne(id);
     if (!unit) {
