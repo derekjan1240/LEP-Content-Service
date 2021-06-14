@@ -12,6 +12,7 @@ import { StudentGroup } from 'src/database/entities/studentGroup.entity';
     TypeOrmModule.forFeature([Classroom, StudentGroup]),
     forwardRef(() => AppModule),
   ],
+  exports: [ClassroomsService],
   controllers: [ClassroomsController],
   providers: [ClassroomsService],
 })

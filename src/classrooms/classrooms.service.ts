@@ -105,6 +105,12 @@ export class ClassroomsService {
     return ClassroomDto.fromEntity(classroom);
   }
 
+  public async findByIds(ids: string[]) {
+    return await this.classroomRepository
+      .findByIds(ids)
+      .then(classrooms => classrooms.map(e => ClassroomDto.fromEntity(e)));
+  }
+
   public async update(id: number, updateClassroomDto: UpdateClassroomDto) {
     return `This action updates a #${id} classroom`;
   }

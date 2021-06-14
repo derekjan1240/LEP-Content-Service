@@ -1,6 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
 import { AppService } from './app.service';
+import { ClassroomsService } from './classrooms/classrooms.service';
 import { ExercisesService } from './exercises/exercises.service';
 import { UnitsService } from './units/units.service';
 
@@ -10,14 +11,26 @@ export class AppController {
     private readonly appService: AppService,
     private readonly unitsService: UnitsService,
     private readonly exerciseService: ExercisesService,
+    private readonly classroomService: ClassroomsService,
   ) {}
+
+  @MessagePattern('CONTENT_get_classroom_relation')
+  async getClassroomsRelation(classrooms: string[]): Promise<any> {
+    try {
+      return await this.classroomService.findByIds(classrooms);
+    } catch (error) {
+      return {};
+    }
+  }
 
   @MessagePattern('CONTENT_get_mission_relation')
   async getMissionContentRelation(data: any): Promise<any> {
-    console.log(data);
     try {
       const units = await this.unitsService.findByIds(data.unitIDs);
-      const exercises = await this.exerciseService.findByIds(data.exerciseIDs);
+      const exercises = await this.exerciseService.findByIds(
+        data.exerciseIDs,
+        data.withAnswers,
+      );
       return {
         units,
         exercises,

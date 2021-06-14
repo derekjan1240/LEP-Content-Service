@@ -85,10 +85,15 @@ export class ExercisesService {
       .then(exercises => exercises.map(e => ExerciseDto.fromEntity(e, true)));
   }
 
-  public async findByIds(ids: string[]): Promise<ExerciseDto[]> {
+  public async findByIds(
+    ids: string[],
+    withAnswer = false,
+  ): Promise<ExerciseDto[]> {
     return await this.exerciseRepository
       .findByIds(ids)
-      .then(exercises => exercises.map(e => ExerciseDto.fromEntity(e, false)));
+      .then(exercises =>
+        exercises.map(e => ExerciseDto.fromEntity(e, withAnswer)),
+      );
   }
 
   public async findOne(id: string): Promise<ExerciseDto> {
