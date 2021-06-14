@@ -36,7 +36,6 @@ export class ExercisesService {
       const newExercise = await this.exerciseRepository.save(
         dto.toEntity(user),
       );
-      console.log(newExercise);
 
       for (let index = 0; index < dto.questions.length; index++) {
         const question = dto.questions[index];
@@ -55,8 +54,6 @@ export class ExercisesService {
           tag: tag,
           exercise: newExercise,
         });
-
-        console.log(newQuestion);
 
         if (question.type === 'choiceAnswer') {
           for (let index = 0; index < question.choices.length; index++) {
