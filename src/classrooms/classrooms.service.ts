@@ -19,10 +19,17 @@ export class ClassroomsService {
   ) {}
 
   public async create(dto: CreateClassroomDto, user: UserDto) {
-    const newClassroom = await this.classroomRepository.save(
-      dto.toEntity(user),
-    );
-    return ClassroomDto.fromEntity(newClassroom);
+    try {
+      const newClassroom = await this.classroomRepository.save(
+        dto.toEntity(user),
+      );
+      return ClassroomDto.fromEntity(newClassroom);
+    } catch (error) {
+      throw new HttpException(
+        `新增班級失敗!`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   public async createGroups(
@@ -56,29 +63,36 @@ export class ClassroomsService {
   }
 
   public async joinClassroom(query, user: UserDto) {
-    const classroom = await this.classroomRepository.findOne(query.classroom);
-    if (!classroom) {
-      throw new HttpException(`班級不存在!`, HttpStatus.NOT_FOUND);
-    }
-    if (classroom && classroom.isAllowAdd) {
-      let newStudentList = '';
-      if (classroom.studentList) {
-        if (classroom.studentList.split(',').indexOf(user._id) !== -1) {
-          throw new HttpException(`已加入班級!`, HttpStatus.BAD_REQUEST);
-        } else {
-          newStudentList = `${classroom.studentList},${user._id}`;
-        }
-      } else {
-        newStudentList = user._id;
+    try {
+      const classroom = await this.classroomRepository.findOne(query.classroom);
+      if (!classroom) {
+        throw new HttpException(`班級不存在!`, HttpStatus.NOT_FOUND);
       }
-      const newClassroom = await this.classroomRepository.save({
-        ...classroom,
-        studentList: newStudentList,
-      });
-      return ClassroomDto.fromEntity(newClassroom);
-    } else {
+      if (classroom && classroom.isAllowAdd) {
+        let newStudentList = '';
+        if (classroom.studentList) {
+          if (classroom.studentList.split(',').indexOf(user._id) !== -1) {
+            throw new HttpException(`已加入班級!`, HttpStatus.BAD_REQUEST);
+          } else {
+            newStudentList = `${classroom.studentList},${user._id}`;
+          }
+        } else {
+          newStudentList = user._id;
+        }
+        const newClassroom = await this.classroomRepository.save({
+          ...classroom,
+          studentList: newStudentList,
+        });
+        return ClassroomDto.fromEntity(newClassroom);
+      } else {
+        throw new HttpException(
+          `無法加入此班級!`,
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
+    } catch (error) {
       throw new HttpException(
-        `無法加入此班級!`,
+        `加入班級失敗!`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
@@ -110,33 +124,54 @@ export class ClassroomsService {
   }
 
   public async findAll(user: UserDto): Promise<ClassroomDto[]> {
-    if (user.role === 'Admin' || user.role === 'Teacher') {
-      const classrooms = await this.classroomRepository
-        .find({ where: { manager: user._id } })
-        .then(classrooms => classrooms.map(e => ClassroomDto.fromEntity(e)));
-      return classrooms;
-    } else {
-      const classrooms = await this.classroomRepository
-        .find()
-        .then(classrooms => classrooms.map(e => ClassroomDto.fromEntity(e)));
-      return classrooms.filter(
-        classroom => classroom.studentList.indexOf(user._id) !== -1,
+    try {
+      if (user.role === 'Admin' || user.role === 'Teacher') {
+        const classrooms = await this.classroomRepository
+          .find({ where: { manager: user._id } })
+          .then(classrooms => classrooms.map(e => ClassroomDto.fromEntity(e)));
+        return classrooms;
+      } else {
+        const classrooms = await this.classroomRepository
+          .find()
+          .then(classrooms => classrooms.map(e => ClassroomDto.fromEntity(e)));
+        return classrooms.filter(
+          classroom => classroom.studentList.indexOf(user._id) !== -1,
+        );
+      }
+    } catch (error) {
+      throw new HttpException(
+        `搜尋班級失敗!`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
   }
 
   public async findOne(id: string, user: UserDto) {
-    const classroom = await this.classroomRepository.findOne(id);
-    if (!classroom) {
-      throw new HttpException(`班級不存在!`, HttpStatus.NOT_FOUND);
+    try {
+      const classroom = await this.classroomRepository.findOne(id);
+      if (!classroom) {
+        throw new HttpException(`班級不存在!`, HttpStatus.NOT_FOUND);
+      }
+      return ClassroomDto.fromEntity(classroom);
+    } catch (error) {
+      throw new HttpException(
+        `搜尋班級失敗!`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
-    return ClassroomDto.fromEntity(classroom);
   }
 
   public async findByIds(ids: string[]) {
-    return await this.classroomRepository
-      .findByIds(ids)
-      .then(classrooms => classrooms.map(e => ClassroomDto.fromEntity(e)));
+    try {
+      return await this.classroomRepository
+        .findByIds(ids)
+        .then(classrooms => classrooms.map(e => ClassroomDto.fromEntity(e)));
+    } catch (error) {
+      throw new HttpException(
+        `搜尋班級失敗!`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   public async update(id: number, updateClassroomDto: UpdateClassroomDto) {
