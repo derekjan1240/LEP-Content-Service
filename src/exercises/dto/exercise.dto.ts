@@ -29,12 +29,18 @@ export class ExerciseDto {
   @IsOptional()
   questions: Question[];
 
+  @ApiProperty({ required: true })
+  @IsString({ message: '習題作者型態錯誤' })
+  @IsNotEmpty({ message: '習題作者不得為空' })
+  owner: String;
+
   public static from(dto: Partial<ExerciseDto>) {
     const it = new ExerciseDto();
     it.id = dto.id;
     it.title = dto.title;
     it.description = dto.description;
     it.questions = dto.questions;
+    it.owner = dto.owner;
     return it;
   }
 
@@ -43,6 +49,7 @@ export class ExerciseDto {
       id: entity.id,
       title: entity.title,
       description: entity.description,
+      owner: entity.owner,
       questions: entity.questions.map(question => {
         return {
           ...question,

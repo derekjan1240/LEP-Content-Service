@@ -93,12 +93,15 @@ export class ExercisesService {
       );
   }
 
-  public async findOne(id: string): Promise<ExerciseDto> {
+  public async findOne(id: string, user: UserDto): Promise<ExerciseDto> {
     const exercise = await this.exerciseRepository.findOne(id);
     if (!exercise) {
       throw new HttpException(`${id} 練習卷不存在!`, HttpStatus.NOT_FOUND);
     }
-    return ExerciseDto.fromEntity(exercise, false);
+    if (exercise.owner !== user._id) {
+      throw new HttpException(`您無法瀏覽此試卷!`, HttpStatus.UNAUTHORIZED);
+    }
+    return ExerciseDto.fromEntity(exercise, true);
   }
 
   // update(id: number, updateExerciseDto: ExerciseDto) {

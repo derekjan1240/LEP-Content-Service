@@ -35,8 +35,12 @@ export class ExercisesController {
   }
 
   @Get(':id')
-  public async findOne(@Param('id') id: string): Promise<ExerciseDto> {
-    return await this.exercisesService.findOne(id);
+  public async findOne(
+    @Req() req,
+    @Param('id') id: string,
+  ): Promise<ExerciseDto> {
+    const user = await this.appService.validAauthentication(req.headers);
+    return await this.exercisesService.findOne(id, user);
   }
 
   @Delete(':id')
