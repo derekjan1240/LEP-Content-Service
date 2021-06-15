@@ -40,11 +40,15 @@ export class ClassroomDto {
   @ApiProperty({ required: false, nullable: true })
   studentList: string[];
 
+  @ApiProperty({ required: false, nullable: true })
+  meetingLink: string;
+
   public static from(dto: Partial<ClassroomDto>) {
     const it = new ClassroomDto();
     it.id = dto.id;
     it.name = dto.name;
     it.description = dto.description;
+    it.meetingLink = dto.meetingLink;
     it.isAllowAdd = dto.isAllowAdd;
     it.manager = dto.manager;
     it.studentGroups = dto.studentGroups;
@@ -57,6 +61,7 @@ export class ClassroomDto {
       id: entity.id,
       name: entity.name,
       description: entity.description,
+      meetingLink: entity.meetingLink,
       isAllowAdd: entity.isAllowAdd,
       manager: entity.manager,
       studentGroups: entity.studentGroups,

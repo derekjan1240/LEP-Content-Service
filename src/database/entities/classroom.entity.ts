@@ -16,6 +16,12 @@ export class Classroom extends BaseEntity {
   @Column({ type: 'varchar', nullable: false })
   manager: string;
 
+  @Column({ type: 'varchar', nullable: true })
+  meetingLink: string;
+
+  @Column({ type: 'varchar', nullable: false })
+  owner: string;
+
   @OneToMany(
     type => StudentGroup,
     studentGroup => studentGroup.classroom,

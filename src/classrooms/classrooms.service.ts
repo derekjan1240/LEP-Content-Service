@@ -57,6 +57,9 @@ export class ClassroomsService {
 
   public async joinClassroom(query, user: UserDto) {
     const classroom = await this.classroomRepository.findOne(query.classroom);
+    if (!classroom) {
+      throw new HttpException(`班級不存在!`, HttpStatus.NOT_FOUND);
+    }
     if (classroom && classroom.isAllowAdd) {
       let newStudentList = '';
       if (classroom.studentList) {
@@ -81,6 +84,31 @@ export class ClassroomsService {
     }
   }
 
+  public async updateClassroomMeetingLink(body, user: UserDto) {
+    try {
+      const classroom = await this.classroomRepository.findOne(body.classroom);
+      if (!classroom) {
+        throw new HttpException(`班級不存在!`, HttpStatus.NOT_FOUND);
+      }
+      if (classroom.manager !== user._id) {
+        throw new HttpException(
+          `只有班級管理員能新增視訊連結!`,
+          HttpStatus.UNAUTHORIZED,
+        );
+      }
+      const newClassroom = await this.classroomRepository.save({
+        ...classroom,
+        meetingLink: body.meetingLink,
+      });
+      return ClassroomDto.fromEntity(newClassroom);
+    } catch (error) {
+      throw new HttpException(
+        `新增視訊連結失敗!`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
   public async findAll(user: UserDto): Promise<ClassroomDto[]> {
     if (user.role === 'Admin' || user.role === 'Teacher') {
       const classrooms = await this.classroomRepository
@@ -100,7 +128,7 @@ export class ClassroomsService {
   public async findOne(id: string, user: UserDto) {
     const classroom = await this.classroomRepository.findOne(id);
     if (!classroom) {
-      throw new HttpException(`班級不存在!`, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(`班級不存在!`, HttpStatus.NOT_FOUND);
     }
     return ClassroomDto.fromEntity(classroom);
   }

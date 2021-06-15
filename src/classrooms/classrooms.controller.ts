@@ -46,6 +46,12 @@ export class ClassroomsController {
     return this.classroomsService.joinClassroom(query, user);
   }
 
+  @Post('/meetingLink')
+  public async updateClassroomMeetingLink(@Req() req, @Body() body) {
+    const user = await this.appService.validAauthentication(req.headers);
+    return this.classroomsService.updateClassroomMeetingLink(body, user);
+  }
+
   @Get()
   public async findAll(@Req() req) {
     const user = await this.appService.validAauthentication(req.headers);
