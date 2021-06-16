@@ -127,12 +127,15 @@ export class ClassroomsService {
     try {
       if (user.role === 'Admin' || user.role === 'Teacher') {
         const classrooms = await this.classroomRepository
-          .find({ where: { manager: user._id } })
+          .find({
+            where: { manager: user._id },
+            order: { createDateTime: 'DESC' },
+          })
           .then(classrooms => classrooms.map(e => ClassroomDto.fromEntity(e)));
         return classrooms;
       } else {
         const classrooms = await this.classroomRepository
-          .find()
+          .find({ order: { createDateTime: 'DESC' } })
           .then(classrooms => classrooms.map(e => ClassroomDto.fromEntity(e)));
         return classrooms.filter(
           classroom => classroom.studentList.indexOf(user._id) !== -1,
