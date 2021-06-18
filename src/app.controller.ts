@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
 import { AppService } from './app.service';
 import { ClassroomsService } from './classrooms/classrooms.service';
@@ -45,9 +45,38 @@ export class AppController {
     return '[Content Service] : OK!';
   }
 
-  // @Get('/hello')
-  // async getHello(): Promise<string> {
-  //   const helloValue = await this.appService.getHello();
-  //   return helloValue;
-  // }
+  /* 實驗用 API */
+  @Post('/test/get/mission/relation')
+  public async getMissionRelation(@Body() body: any) {
+    const exerciseIDs = body.data.contents
+      .filter(mission => mission.exercise !== '')
+      .map(mission => mission.exercise);
+    const unitIDs = body.data.contents
+      .filter(mission => mission.unit !== '')
+      .map(mission => mission.unit);
+    const withAnswers = body.data.withAnswers;
+
+    try {
+      const units = await this.unitsService.findByIds(unitIDs);
+      const exercises = await this.exerciseService.findByIds(
+        exerciseIDs,
+        withAnswers,
+      );
+      return {
+        units,
+        exercises,
+      };
+    } catch (error) {
+      return false;
+    }
+  }
+
+  @Post('/test/get/classroom/relation')
+  public async getClassroomRelation(@Body() body: any) {
+    try {
+      return await this.classroomService.findByIds(body.data.classrooms);
+    } catch (error) {
+      return {};
+    }
+  }
 }
