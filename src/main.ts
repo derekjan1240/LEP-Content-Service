@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
 import { Logger, ValidationPipe } from '@nestjs/common';
+import { AppModule } from './app.module';
 import { initSwagger } from './app.swagger';
 
 import { Transport, MicroserviceOptions } from '@nestjs/microservices';

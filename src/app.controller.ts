@@ -40,6 +40,17 @@ export class AppController {
     }
   }
 
+  @MessagePattern('CONTENT_test')
+  async getContentTest(id: number): Promise<any> {
+    const FAKE_CONTENT_DATA = [
+      {
+        id: '1',
+        name: 'FAKE_CONTENT_DATA',
+      },
+    ];
+    return FAKE_CONTENT_DATA[id];
+  }
+
   @Get()
   test(): string {
     return '[Content Service] : OK!';
@@ -78,5 +89,16 @@ export class AppController {
     } catch (error) {
       return {};
     }
+  }
+
+  @Post('test')
+  public async contentTest(@Body() body: any) {
+    const FAKE_CONTENT_DATA = [
+      {
+        id: '1',
+        name: 'FAKE_CONTENT_DATA',
+      },
+    ];
+    return FAKE_CONTENT_DATA[body.data.id];
   }
 }
