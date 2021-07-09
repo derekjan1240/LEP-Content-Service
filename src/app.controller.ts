@@ -31,9 +31,27 @@ export class AppController {
         data.exerciseIDs,
         data.withAnswers,
       );
+      const exerciseUnits = await this.unitsService.findByIds(
+        exercises
+          .map(exercise => exercise.questions)[0]
+          .map(question => question.unit.id),
+      );
+
       return {
         units,
-        exercises,
+        exercises: exercises.map(exercise => {
+          return {
+            ...exercise,
+            questions: exercise.questions.map(question => {
+              return {
+                ...question,
+                unit: exerciseUnits.filter(
+                  unit => unit.id === question.unit.id,
+                )[0],
+              };
+            }),
+          };
+        }),
       };
     } catch (error) {
       return {};
