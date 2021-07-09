@@ -41,9 +41,9 @@ export class ClassroomsController {
   }
 
   @Post('/join')
-  public async joinClassroom(@Req() req, @Query() query) {
+  public async joinClassroom(@Req() req, @Body() body) {
     const user = await this.appService.validAauthentication(req.headers);
-    return this.classroomsService.joinClassroom(query, user);
+    return this.classroomsService.joinClassroom(body, user);
   }
 
   @Post('/meetingLink')
@@ -59,12 +59,13 @@ export class ClassroomsController {
   }
 
   @Get(':id')
-  public async findOne(@Req() req, @Param('id') id: string) {
+  public async findOne(@Req() req, @Param('id') id: string, @Query() query) {
     const user = await this.appService.validAauthentication(req.headers);
     const classroom = await this.classroomsService.findOne(id, user);
     if (
       classroom.manager !== user._id &&
-      classroom.studentList.indexOf(user._id) === -1
+      classroom.studentList.indexOf(user._id) === -1 &&
+      !query.isGuest
     ) {
       throw new HttpException(`您不在此班級中哦!`, HttpStatus.UNAUTHORIZED);
     }

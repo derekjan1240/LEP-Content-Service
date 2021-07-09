@@ -62,9 +62,9 @@ export class ClassroomsService {
     }
   }
 
-  public async joinClassroom(query, user: UserDto) {
+  public async joinClassroom(body, user: UserDto) {
     try {
-      const classroom = await this.classroomRepository.findOne(query.classroom);
+      const classroom = await this.classroomRepository.findOne(body.classroom);
       if (!classroom) {
         throw new HttpException(`班級不存在!`, HttpStatus.NOT_FOUND);
       }
